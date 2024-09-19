@@ -3,3 +3,8 @@
 .python-version
 /__pycache__/
 .env
+*.csv
+*.xlsx
+*.docx
+*/data/
+*.png

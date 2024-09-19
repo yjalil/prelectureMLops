@@ -1,4 +1,3 @@
-
 import math
 def haversine(lat1, lon1, lat2, lon2):
     R = 6371  # Rayon de la Terre en km
@@ -19,8 +18,3 @@ def haversine(lat1, lon1, lat2, lon2):
     # Calculer la distance
     distance = R * c
     return distance
-
-
-def distancedf(df):
-    df["distance"]= df.apply(lambda x: haversine(x.pickup_longitude,x.pickup_latitude,x.dropoff_longitude,x.dropoff_latitude),axis=1)
-    return df

@@ -10,6 +10,3 @@ def get_secret() -> str:
     return conf.secret
 
 
-if __name__ == "__main__":
-    print(hello())
-    print(get_secret())

@@ -24,18 +24,19 @@ from project.models.RNN import initiate_compile_model
 class Trainer():
     def __init__(self, run_root_path : str) -> None:
         self.run_root_path = Path(run_root_path)
-        print("run root path: ", self.run_root_path)
+        #print("run root path: ", self.run_root_path)
         self.params_path = self.run_root_path / "params.json"
-        print("params path: ", self.params_path)
+        #print("params path: ", self.params_path)
         self.outputs_path = self.run_root_path / "outputs"
         #self.outputs_path.mkdir(exist_ok=True)
-        print("output path: ", self.outputs_path)
+        #print("output path: ", self.outputs_path)
         with self.params_path.open("r") as f:
             self.params = json.load(f)
 
     def load_data(self):
         if self.params['local']:
             self.data = pd.read_csv(self.params["source"], nrows=self.params["source_limit"])
+            #self.data = pd.read_csv(self.params["source"])
         else:
             self.data = load_data_from_bigquery(self.params["source"], self.params["source_limit"])
 
@@ -56,6 +57,7 @@ class Trainer():
         self.data= self.data[self.data['passenger_count']> 0]
 
         self.data = self.data[['fare_amount', 'passenger_count', 'is_day', 'distance_km']]
+        print(" data shape", self.data.shape)
         return self
 
     def rescale(self):
@@ -90,9 +92,41 @@ class Trainer():
         )
         self.res = model.evaluate(self.X_test, self.y_test)[1]
         self.model = model
+        self.history = history
         return self
+
+    def plot_history(self):
+        # Setting figures
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13,4))
+        # Create the plots
+        ax1.plot(self.history.history['loss'])
+        ax1.plot(self.history.history['val_loss'])
+        ax2.plot(self.history.history['mae'])
+        ax2.plot(self.history.history['val_mae'])
+        # Set titles and labels
+        ax1.set_title('Model loss')
+        ax1.set_ylabel('Loss')
+        ax1.set_xlabel('Epoch')
+        ax2.set_title('MAE')
+        ax2.set_ylabel('MAE')
+        ax2.set_xlabel('Epoch')
+        # Set limits for y-axes
+        ax1.set_ylim(ymin=0, ymax=200)
+        ax2.set_ylim(ymin=0, ymax=25)
+        # Generate legends
+        ax1.legend(['Train', 'Validation'], loc='best')
+        ax2.legend(['Train', 'Validation'], loc='best')
+        # Show grids
+        ax1.grid(axis="x", linewidth=0.5)
+        ax1.grid(axis="y", linewidth=0.5)
+        ax2.grid(axis="x", linewidth=0.5)
+        ax2.grid(axis="y", linewidth=0.5)
+
+        plt.savefig(self.outputs_path /"history_loss_mae.png")
+        return self
+
     def save_model(self):
-        models.save_model(self.model, self.outputs_path/"results.h5")
+        models.save_model(self.model, self.outputs_path/"results.keras")
         return self
 
 
@@ -100,10 +134,10 @@ if __name__ == "__main__":
     argparser = argparse.ArgumentParser()
     argparser.add_argument("--run-root-path", required=True)
     args = argparser.parse_args()
-    print("args", args.run_root_path)
+    #print("args", args.run_root_path)
     trainer = Trainer(args.run_root_path)
     trainer.load_data()
     model = trainer.load_data().preprocess().rescale().explore().split_data().train().save_model()
-
+    model = model.plot_history()
     print( f"model evaluation, {trainer.res}")
    # print(trainer.data.head())

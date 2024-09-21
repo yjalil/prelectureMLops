@@ -1,5 +1,5 @@
 import numpy as np
-
+from sklearn.preprocessing import MinMaxScaler
 
 def haversine(lon1, lat1, lon2, lat2):
     R = 6371  # Radius of the Earth in kilometers

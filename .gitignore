@@ -1,7 +1,7 @@
 *.json
 *.egg-info
 .python-version
-*/__pycache__/
+**/__pycache__/
 .env
 *.csv
 *.xlsx

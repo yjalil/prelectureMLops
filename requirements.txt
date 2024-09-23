@@ -20,6 +20,7 @@ google-api-core
 google-auth
 google-cloud-bigquery
 google-cloud-core
+google-cloud-storage
 google-crc32c
 google-pasta
 google-resumable-media
@@ -68,6 +69,7 @@ pygeohash
 Pygments
 pyparsing
 python-dateutil
+python-dotenv
 pytz
 pyzmq
 requests
@@ -79,10 +81,6 @@ seaborn
 six
 soupsieve
 stack-data
-tensorboard
-tensorboard-data-server
-tensorflow
-tensorflow-io-gcs-filesystem
 termcolor
 threadpoolctl
 tornado

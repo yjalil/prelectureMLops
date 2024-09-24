@@ -5,9 +5,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class Settings:
-    secret = os.environ.get('SECRET')
+    key = os.environ.get('KEY')
 
 conf = Settings()
 
 if __name__ == '__main__':
-    print(conf.secret)
+    print(conf.key)
